@@ -70,7 +70,7 @@ def au_login_and_password_error():
                 img = PhotoImage(file="bckgrimg.png")
                 image = canvas.create_image(200, 200, image = img)
                 canvas.create_text(200, 200, text='Вы успешно авторизированы!', font='30')
-                button_w = Button(window, text='Начать игру', command= lambda: draw_chessboard(window), bg='#FFFFFF')
+                button_w = Button(window, text='Начать игру', command= lambda: draw_chessboard(window))
                 button_w = canvas.create_window(200, 250, window=button_w)
                 window.grab_set()
                 window.resizable(width=False, height=False)
@@ -99,8 +99,6 @@ def draw_chessboard(window):
     chessboard.title("Текущая игра")
     chessboard.geometry("900x900")
     chessboard.resizable(width=False, height=False)
-    x = 50
-    y = 50
     canvas = Canvas(chessboard)
     canvas.pack(fill="both", expand=True)
     # Буквенные обозначения по краям поля
@@ -121,15 +119,34 @@ def draw_chessboard(window):
     canvas.create_text(25, 100, text='8'), canvas.create_text(25, 200, text='7'), canvas.create_text(25, 300, text='6')
     canvas.create_text(25, 400, text='5'), canvas.create_text(25, 500, text='4'), canvas.create_text(25, 600, text='3')
     canvas.create_text(25, 700, text='2'), canvas.create_text(25, 800, text='1')
-    # Создание клеток шахматного поля
-    for n in range(1, 9):
-        for m in range(1, 9):
-            exec(f'button{n} = ttk.Button(chessboard, command = lambda: click(button{n},{n}))')
-            exec(f'button{n}.place(x = {x}, y = {y}, width=100, height=100)')
-            y += 100
-        x += 100
-        y = 50
-    #Расстановка фигур
+    # Создание шахматных клеток
+    canvas_igr = Canvas(chessboard, bg='white', width=800, height=800)
+    canvas_igr.place(x=50, y=50)
+    global color
+    worb = 0
+    pole = []
+    row = 0
+    col = 0
+    # Определение цвета клетки
+    for i in range(1, 9):
+        for j in range(1, 9):
+            worb += 1
+            if i % 2 == 0:
+                if worb % 2 == 0:
+                    color = "white"
+                else:
+                    color = "black"
+            elif i % 2 != 0:
+                if worb % 2 != 0:
+                    color = "white"
+                else:
+                    color = "black"
+            pole.append(Button(chessboard, bg=color, fg="white", activebackground="white", relief="flat"))
+            canvas_igr.create_window(row, col, anchor=NW, window=pole[worb - 1], width=100, height=100)
+            row += 100
+        row = 0
+        col += 100
+    canvas.pack()
 
 root.resizable(width=False, height=False)
 root.mainloop()
