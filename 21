@@ -1,9 +1,13 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
+import random
+import math
 import tkinter.messagebox as mb
+
+# Создание окна регистрации и аторизации
 root = Tk()
-root.title("Лабораторная работа №21")
+root.title("Регистрация и авторизация")
 root.geometry("400x400")
 frame = Frame(root)
 au_password = StringVar()
@@ -11,7 +15,10 @@ reg_password = StringVar()
 au_login = StringVar()
 reg_login = StringVar()
 bg = PhotoImage(file="backgrimage.png")
+
+# Ввод логина и пароля в окне регистрации и авторизации
 def entry_regist_and_login():
+    # Регистрация
     canvas = Canvas(root, width=400, height=400)
     canvas.pack(fill="both", expand=True)
     canvas.create_image(0, 0, image=bg, anchor="nw")
@@ -24,7 +31,8 @@ def entry_regist_and_login():
     entry_password = canvas.create_window(140, 120, anchor="nw", window=entry_password)
     button_a = Button(root, text='Зарегистрироваться', command=reg_login_and_password_error, bg='#FFFFFF')
     button_a = canvas.create_window(140, 160, anchor="nw", window=button_a)
-    canvas.create_text(200, 215, text='Авторизация', font='30', fill="#FFFFFF")
+    # Авторизация
+    canvas.create_text(200, 220, text='Авторизация', font='30', fill="#FFFFFF")
     canvas.create_text(200, 250, text='Введите логин')
     entry_login = Entry(root, textvariable=au_login)
     entry_login = canvas.create_window(140, 260, anchor="nw", window=entry_login)
@@ -33,6 +41,8 @@ def entry_regist_and_login():
     entry_password = canvas.create_window(140, 310, anchor="nw", window=entry_password)
     button_r = Button(root, text='Авторизироваться', command=au_login_and_password_error, bg='#FFFFFF')
     button_r = canvas.create_window(145, 350, anchor="nw", window=button_r)
+
+# Проверка на ошибку авторизации
 def au_login_and_password_error():
     if (len(au_login.get()) == 0 or len(au_password.get()) == 0) or (
             len(au_login.get()) == 0 and len(au_password.get()) == 0) or au_login.get().count(' ') > 0 or \
@@ -43,10 +53,12 @@ def au_login_and_password_error():
         while TRUE:
             line = file.readline()
             line = line.split()
+            # Ошибка авторизации
             if len(line) == 0:
                 file.close()
                 mb.showerror("Ошибка", "Неверные логин или пароль")
                 break
+            # Успешная авторизация
             elif line[0] == au_login.get() and line[1] == au_password.get():
                 file.close()
                 root.destroy()
@@ -58,23 +70,66 @@ def au_login_and_password_error():
                 img = PhotoImage(file="bckgrimg.png")
                 image = canvas.create_image(200, 200, image = img)
                 canvas.create_text(200, 200, text='Вы успешно авторизированы!', font='30')
-                def window_destroy():
-                    window.destroy()
-                button_w = Button(window, text='Начать игру', command=window_destroy, bg='#FFFFFF')
+                button_w = Button(window, text='Начать игру', command= lambda: draw_chessboard(window), bg='#FFFFFF')
                 button_w = canvas.create_window(200, 250, window=button_w)
                 window.grab_set()
+                window.resizable(width=False, height=False)
                 window.mainloop()
                 break
+
+# Проверка на ошибку регистрации
 def reg_login_and_password_error():
+    # Ошибка регистрации
     if (len(reg_login.get()) == 0 or len(reg_password.get()) == 0) or (
             len(reg_login.get()) == 0 and len(reg_password.get()) == 0) or reg_login.get().count(' ') > 0 or \
             reg_password.get().count(' ') > 0:
         mb.showerror("Ошибка", "Должны быть введены данные")
+    # Успешная регистрация
     else:
         file = open('reg_login.txt', 'a')
         file.write(reg_login.get() + ' ' + reg_password.get() + '\n')
         file.close()
         mb.showinfo("Успешная регистрация", "Вы успешно зарегистрировались. Пожалуйста, авторизуйтесь")
 entry_regist_and_login()
+
+# Отрисовка игрового поля
+def draw_chessboard(window):
+    window.destroy()
+    chessboard = Tk()
+    chessboard.title("Текущая игра")
+    chessboard.geometry("900x900")
+    chessboard.resizable(width=False, height=False)
+    x = 50
+    y = 50
+    canvas = Canvas(chessboard)
+    canvas.pack(fill="both", expand=True)
+    # Буквенные обозначения по краям поля
+    # Снизу
+    canvas.create_text(100, 875, text='A'), canvas.create_text(200, 875, text='B'), canvas.create_text(300, 875, text='C')
+    canvas.create_text(400, 875, text='D'), canvas.create_text(500, 875, text='E'), canvas.create_text(600, 875, text='F')
+    canvas.create_text(700, 875, text='G'), canvas.create_text(800, 875, text='H')
+    # Сверху
+    canvas.create_text(100, 25, text='H'), canvas.create_text(200, 25, text='G'), canvas.create_text(300, 25, text='F')
+    canvas.create_text(400, 25, text='E'), canvas.create_text(500, 25, text='D'), canvas.create_text(600, 25, text='C')
+    canvas.create_text(700, 25, text='B'), canvas.create_text(800, 25, text='A')
+    # Численные обозначения по краям поля
+    # Справа
+    canvas.create_text(875, 100, text='1'), canvas.create_text(875, 200, text='2'), canvas.create_text(875, 300, text='3')
+    canvas.create_text(875, 400, text='4'), canvas.create_text(875, 500, text='5'), canvas.create_text(875, 600, text='6')
+    canvas.create_text(875, 700, text='7'), canvas.create_text(875, 800, text='8')
+    # Слева
+    canvas.create_text(25, 100, text='8'), canvas.create_text(25, 200, text='7'), canvas.create_text(25, 300, text='6')
+    canvas.create_text(25, 400, text='5'), canvas.create_text(25, 500, text='4'), canvas.create_text(25, 600, text='3')
+    canvas.create_text(25, 700, text='2'), canvas.create_text(25, 800, text='1')
+    # Создание клеток шахматного поля
+    for n in range(1, 9):
+        for m in range(1, 9):
+            exec(f'button{n} = ttk.Button(chessboard, command = lambda: click(button{n},{n}))')
+            exec(f'button{n}.place(x = {x}, y = {y}, width=100, height=100)')
+            y += 100
+        x += 100
+        y = 50
+    #Расстановка фигур
+
 root.resizable(width=False, height=False)
 root.mainloop()
