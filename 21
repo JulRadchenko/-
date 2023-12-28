@@ -79,17 +79,32 @@ def au_login_and_password_error():
 
 # Проверка на ошибку регистрации
 def reg_login_and_password_error():
-    # Ошибка регистрации
+    # Проверка на пустое поле
     if (len(reg_login.get()) == 0 or len(reg_password.get()) == 0) or (
-            len(reg_login.get()) == 0 and len(reg_password.get()) == 0) or reg_login.get().count(' ') > 0 or \
-            reg_password.get().count(' ') > 0:
-        mb.showerror("Ошибка", "Должны быть введены данные")
-    # Успешная регистрация
+        len(reg_login.get()) == 0 and len(reg_password.get()) == 0) or reg_login.get().count(' ') > 0 or \
+        reg_password.get().count(' ') > 0:
+        mb.showerror("Ошибка", "Введены неверные данные")
+    # Проверка на длину логина и пароля
+    elif len(reg_login.get()) <= 5 or len(reg_password.get()) <= 5:
+        mb.showerror("Ошибка", "Логин и пароль должны состоять не менее чем из 6 символов")
     else:
-        file = open('reg_login.txt', 'a')
-        file.write(reg_login.get() + ' ' + reg_password.get() + '\n')
-        file.close()
-        mb.showinfo("Успешная регистрация", "Вы успешно зарегистрировались. Пожалуйста, авторизуйтесь")
+        file = open('reg_login.txt', 'r')
+        while TRUE:
+            line = file.readline()
+            line = line.split()
+            # Проверка на совпадение логина и пароля
+            if line[0] == reg_login.get() and line[1] == reg_password.get():
+                file.close()
+                mb.showerror("Ошибка", "Логин и пароль уже существуют")
+                break
+            # Успешня регистрация
+            else:
+                file.close()
+                file = open('reg_login.txt', 'a+')
+                file.write(reg_login.get() + ' ' + reg_password.get() + '\n')
+                file.close()
+                mb.showinfo("Успешная регистрация", "Вы успешно зарегистрировались. Пожалуйста, авторизуйтесь")
+                break
 entry_regist_and_login()
 
 # Отрисовка игрового поля
@@ -120,8 +135,8 @@ def draw_chessboard(window):
     canvas.create_text(25, 400, text='5'), canvas.create_text(25, 500, text='4'), canvas.create_text(25, 600, text='3')
     canvas.create_text(25, 700, text='2'), canvas.create_text(25, 800, text='1')
     # Создание шахматных клеток
-    canvas_igr = Canvas(chessboard, bg='white', width=800, height=800)
-    canvas_igr.place(x=50, y=50)
+    canvas_board = Canvas(chessboard, bg='white', width=800, height=800)
+    canvas_board.place(x=50, y=50)
     global color
     worb = 0
     pole = []
@@ -142,11 +157,21 @@ def draw_chessboard(window):
                 else:
                     color = "black"
             pole.append(Button(chessboard, bg=color, fg="white", activebackground="white", relief="flat"))
-            canvas_igr.create_window(row, col, anchor=NW, window=pole[worb - 1], width=100, height=100)
+            canvas_board.create_window(row, col, anchor=NW, window=pole[worb - 1], width=100, height=100)
             row += 100
         row = 0
         col += 100
     canvas.pack()
 
+# Размещение шахматных фигур
+def chess_randomplace():
+    chessplace = [0,0,0,0,0,0,0,0,
+                  0,0,0,0,0,0,0,0,
+                  0,0,0,0,0,0,0,0,
+                  0,0,0,0,0,0,0,0,
+                  0,0,0,0,0,0,0,0,
+                  0,0,0,0,0,0,0,0,
+                  0,0,0,0,0,0,0,0,
+                  0,0,0,0,0,0,0,0]
 root.resizable(width=False, height=False)
 root.mainloop()
