@@ -25,6 +25,7 @@ chessplace = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0]]
+# Массив клеток на поле
 pole = [[0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
@@ -173,12 +174,12 @@ def draw_chessboard(window):
                     color = "white"
                 else:
                     color = "black"
+            # Создание клеток
             pole[i][j] = (Button(chessboard, bg=color, relief="flat"))
             canvas_board.create_window(row, col, anchor=NW, window=pole[i][j], width=100, height=100)
             row += 100
         row = 0
         col += 100
-    print(pole)
     canvas.pack()
     # Размещение шахматных фигур на поле
     global chessplace
@@ -199,19 +200,15 @@ def draw_chessboard(window):
     if chessplace[i_wking][j_wking] == 0:
         chessplace[i_wking][j_wking] = 2
     pole[i_wking][j_wking]['image'] = img3
-
     if chessplace[i_bking][j_bking] == 0:
         chessplace[i_bking][j_bking] = -2
     pole[i_bking][j_bking]['image'] = img4
-
     if chessplace[i_wrook][j_wrook] == 0:
         chessplace[i_wrook][j_wrook] = 1
     pole[i_wrook][j_wrook]['image'] = img2
-
     if chessplace[i_brook][j_brook] == 0:
         chessplace[i_brook][j_brook] = -1
     pole[i_brook][j_brook]['image'] = img1
-    print(chessplace)
     chessboard.mainloop()
 root.resizable(width=False, height=False)
 root.mainloop()
