@@ -188,7 +188,7 @@ def check(i,x,y):
             elif check_shah_bel > 1:
                 mb.showinfo(title="ok", message="ВЫЙГРАЛИ ЧЁРНЫЕ")
             elif check_shah_cher > 1:
-                mb.showinfo(title="ok", message="ВЫЙГРАЛИ ВЫЙГРАЛИ БЕЛЫЕ")
+                mb.showinfo(title="ok", message="ВЫЙГРАЛИ БЕЛЫЕ")
     elif x == x_last and y == y_last:
         mb.showinfo(title="ok", message="Фигура больше выбрана")
         ngo = 1
