@@ -17,6 +17,7 @@ reg_login = StringVar()
 bg = PhotoImage(file="backgrimage.png")
 
 # Массив моделирования игрового поля
+global chessplace
 chessplace = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
@@ -25,7 +26,11 @@ chessplace = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0]]
-# Массив клеток на поле
+global pole
+ngo = 1
+y_last = 0
+x_last= 0
+# Массив клеток поля
 pole = [[0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
@@ -34,7 +39,86 @@ pole = [[0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0]]
-
+# Оценочная функция для короля
+king_points = [[0,0,0,0,0,0,0,0],
+                [0,0,1,1,1,1,0,0],
+                [0,1,1,2,2,1,1,0],
+                [0,1,2,3,3,2,1,0],
+                [0,1,2,3,3,2,1,0],
+                [0,1,1,2,2,1,1,0],
+                [0,0,1,1,1,1,0,0],
+                [0,0,0,0,0,0,0,0]]
+# Оценочная функция для ладьи
+king_points = [[0,0,0,0,0,0,0,0],
+                [0,1,1,1,1,1,1,0],
+                [0,1,1,1,1,1,1,0],
+                [0,1,2,2,2,2,1,0],
+                [0,1,2,2,2,2,1,0],
+                [0,1,1,1,1,1,1,0],
+                [0,1,1,1,1,1,1,0],
+                [0,0,0,0,0,0,0,0]]
+# Ходы
+def play(i,x,y):
+    global ngo,x_last,y_last,last_color,last_image
+    # Первый ход
+    if ngo == 1 and pole[x][y]['image']!='':
+        ngo = 2
+        last_image =pole[x][y]['image']
+        x_last = x
+        y_last = y
+    # Второй ход
+    elif ngo ==2:
+        # Перемещение белого короля
+        if chessplace[x_last][y_last] == 2 and ((x_last - x == 0 and abs(y- y_last) >0) or (y_last - y == 0 and abs(x - x_last) >0)):
+            chessplace[x][y] = 2
+            ngo = 1
+            pole[x][y]['image'] = last_image
+            pole[x_last][y_last]['image'] = ''
+        # Проверка на правильность хода
+        elif chessplace[x_last][y_last] == 2 and ((x_last - x != 0 and abs(y - y_last) >0) or (y_last - y == 0 and abs(x - x_last) >0)):
+            mb.showerror(title="Not", message="Неверный ход")
+            ngo = 1
+            return
+        # Перемещение черного короля
+        elif chessplace[x_last][y_last] == -2 and ((x_last - x == 0 and abs(y- y_last) >0) or (y_last - y == 0 and abs(x - x_last) >0)):
+            chessplace[x][y] = -2
+            ngo = 1
+            pole[x][y]['image'] = last_image
+            pole[x_last][y_last]['image'] = ''
+        # Проверка на правильность хода
+        elif chessplace[x_last][y_last] == -2 and ((x_last - x != 0 and abs(y- y_last) >0) or (y_last - y == 0 and abs(x - x_last) >0)):
+            mb.showerror(title="Not", message="Неверный ход")
+            ngo = 1
+            return
+        # Перемещение белой ладьи
+        elif chessplace[x_last][y_last] == 1 and ((abs(x_last - x) == 1 or abs(y- y_last) == 1)):
+            chessplace[x][y] = 1
+            ngo = 1
+            pole[x][y]['image'] = last_image
+            pole[x_last][y_last]['image'] = ''
+        # Проверка на правильность хода
+        elif chessplace[x_last][y_last] == 1 and ((abs(x_last - x) > 1 or abs(y- y_last) > 1)):
+            mb.showerror(title="Not", message="Неверный ход")
+            ngo = 1
+            return
+        # Перемещение черной ладьи
+        elif chessplace[x_last][y_last] == -1 and ((abs(x_last - x) == 1 or abs(y- y_last) == 1)):
+            chessplace[x][y] = -1
+            ngo = 1
+            pole[x][y]['image'] = last_image
+            pole[x_last][y_last]['image'] = ''
+            pole[x_last][y_last]['bg'] = last_color
+        # Проверка на правильность хода
+        elif chessplace[x_last][y_last] == -1 and ((abs(x_last - x) > 1 or abs(y- y_last) > 1)):
+            mb.showerror(title="Not", message="Неверный ход")
+            ngo = 1
+            pole[x][y]['bg'] = last_color
+            return
+    # Отмена выбора
+    elif x == x_last and y == y_last:
+        mb.showinfo(title="ok", message="Фигура больше не выбрана")
+        ngo = 1
+        
 # Ввод логина и пароля в окне регистрации и авторизации
 def entry_regist_and_login():
     # Регистрация
@@ -174,28 +258,26 @@ def draw_chessboard(window):
                     color = "white"
                 else:
                     color = "black"
-            # Создание клеток
-            pole[i][j] = (Button(chessboard, bg=color, relief="flat"))
+            pole[i][j] = (Button(chessboard, bg=color, relief="flat",command=lambda worb =worb,i=i, j=j: play(worb,i,j)))
             canvas_board.create_window(row, col, anchor=NW, window=pole[i][j], width=100, height=100)
             row += 100
         row = 0
         col += 100
-    canvas.pack()
     # Размещение шахматных фигур на поле
-    global chessplace
-    img1 = PhotoImage(master = canvas_board, file="img1.png")
-    img2 = PhotoImage(master = canvas_board, file="img2.png")
-    img3 = PhotoImage(master = canvas_board, file="img3.png")
-    img4 = PhotoImage(master = canvas_board, file="img4.png")
+    global img1 ,img2,img3,img4
+    img1 = PhotoImage(master= canvas_board,file="img10.png")
+    img2 = PhotoImage(master= canvas_board,file="img20.png")
+    img3 = PhotoImage(master= canvas_board,file="img30.png")
+    img4 = PhotoImage(master= canvas_board,file="img40.png")
     # Начальное расположение
-    i_wking = random.randrange(0,8,2)
-    j_wking = random.randrange(1,9,2)
-    i_bking = random.randrange(1,9,2)
-    j_bking = random.randrange(1,9,2)
-    i_wrook = random.randrange(0,8,2)
-    j_wrook = random.randrange(1,9,2)
-    i_brook = random.randrange(1,9,2)
-    j_brook = random.randrange(1,9,2)
+    i_wking = random.randint(0, 7)
+    j_wking = random.randint(0, 7)
+    i_bking = random.randint(0, 7)
+    j_bking = random.randint(0, 7)
+    i_wrook = random.randint(0, 7)
+    j_wrook = random.randint(0, 7)
+    i_brook = random.randint(0, 7)
+    j_brook = random.randint(0, 7)
     # Выставление веса фигур и картинок
     if chessplace[i_wking][j_wking] == 0:
         chessplace[i_wking][j_wking] = 2
