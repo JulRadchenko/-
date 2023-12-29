@@ -181,14 +181,10 @@ def check(i,x,y):
             check_hod(x_last, y_last, chessplace[x][y], 1)
             ngo = 1
             check_hod(x, y, chessplace[x][y], 2)
-            if check_shah_bel == 1:
-                mb.showinfo(title="ok", message="ШАХ БЕЛЫМ")
-            elif check_shah_cher == 1:
-                mb.showinfo(title="ok", message="ШАХ ЧЁРНЫМ")
-            elif check_shah_bel > 1:
-                mb.showinfo(title="ok", message="ВЫЙГРАЛИ ЧЁРНЫЕ")
+            if check_shah_bel > 1:
+                mb.showinfo(title="ok", message="Победили чёрные")
             elif check_shah_cher > 1:
-                mb.showinfo(title="ok", message="ВЫЙГРАЛИ БЕЛЫЕ")
+                mb.showinfo(title="ok", message="Победили белые")
     elif x == x_last and y == y_last:
         mb.showinfo(title="ok", message="Фигура больше выбрана")
         ngo = 1
