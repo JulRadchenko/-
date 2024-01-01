@@ -45,53 +45,53 @@ pole = [[0,0,0,0,0,0,0,0],
 def check_hod(x,y,k,clear):
     # Установка подсказок
     if clear == 0:
-        if k == 1 or k ==-1: # Ладья
-            for i in range(y+1,8): # Ход вверх
-                if(i>=0 and i<8) and pole[x][i]['image'] == '':
+        if k == 1 or k == -1: # Ладья
+            for i in range(y+1, 8): # Ход вверх
+                if (i>=0 and i<8) and pole[x][i]['image'] == '':
                     pole[x][i]['image'] = circle
                 elif (i>=0 and i<8) and pole[x][i]['image'] != '':
                         break
-            for i1 in range(y-1,0-1,-1): # Ход вниз
-                if (i1 >=0 and i1 <8) and pole[x][i1]['image'] == '':
+            for i1 in range(y-1, 0-1, -1): # Ход вниз
+                if (i1>=0 and i1<8) and pole[x][i1]['image'] == '':
                     pole[x][i1]['image'] = circle
-                elif (i1 >=0 and i1 <8) and pole[x][i1]['image'] != '':
+                elif (i1>=0 and i1<8) and pole[x][i1]['image'] != '':
                         break
-            for i2 in range(x+1,8): # Ход вправо
-                if (i2 >=0 and i2 <8) and pole[i2][y]['image'] == '':
+            for i2 in range(x+1, 8): # Ход вправо
+                if (i2>=0 and i2<8) and pole[i2][y]['image'] == '':
                     pole[i2][y]['image'] = circle
-                elif (i2 >=0 and i2 <8) and pole[i2][y]['image'] != '':
+                elif (i2>=0 and i2<8) and pole[i2][y]['image'] != '':
                     break
-            for i3 in range(x-1,0-1,-1): # Ход влево
-                if (i3 >=0 and i3 <8) and pole[i3][y]['image'] == '':
+            for i3 in range(x-1, 0-1, -1): # Ход влево
+                if (i3>=0 and i3<8) and pole[i3][y]['image'] == '':
                     pole[i3][y]['image'] = circle
-                elif (i3 >=0 and i3 <8) and pole[i3][y]['image'] != '':
+                elif (i3>=0 and i3<8) and pole[i3][y]['image'] != '':
                     break
         elif k == 2 or k == -2: # Король
-            for i in range(x-1,x+2):
-                for j in range(y - 1, y + 2):
+            for i in range(x-1, x+2):
+                for j in range(y-1, y+2):
                     if ((i>=0 and i<8) and (j>=0 and j<8)) and pole[i][j]['image'] == '':
                         pole[i][j]['image'] = circle
     # Удаление подсказок
     elif clear == 1:
         if k == 1 or k == -1: # Ладья
-            for i in range(y + 1, 8): # Ход вверх
-                if (i >= 0 and i < 8) and (chessplace[x][i] == 0):
+            for i in range(y+1, 8): # Ход вверх
+                if (i>=0 and i<8) and chessplace[x][i] == 0:
                     pole[x][i]['image'] = ''
-            for i1 in range(y - 1, 0 - 1, -1): # Ход вниз
-                if (i1 >= 0 and i1 < 8)and (chessplace[x][i1] == 0):
+            for i1 in range(y-1, 0-1, -1): # Ход вниз
+                if (i1>=0 and i1<8)and chessplace[x][i1] == 0:
                     pole[x][i1]['image'] = ''
-            for i2 in range(x + 1, 8): # Ход вправо
-                if (i2 >= 0 and i2 < 8)and (chessplace[i2][y] == 0):
+            for i2 in range(x+1, 8): # Ход вправо
+                if (i2>=0 and i2<8)and chessplace[i2][y] == 0:
                     pole[i2][y]['image'] = ''
             for i3 in range(x - 1, 0 - 1, -1): # Ход влево
-                if (i3 >= 0 and i3 < 8)and (chessplace[i3][y] == 0):
+                if (i3>=0 and i3<8) and chessplace[i3][y] == 0:
                     pole[i3][y]['image'] = ''
         elif k == 2 or k == -2: # Король
-            for i in range(x-2,x+2):
-                for j in range(y - 2, y + 2):
-                    if ((i >=0 and i <8) and (j >=0 and j <8)) and (chessplace[i][j] == 0):
+            for i in range(x-2, x+2):
+                for j in range(y-2, y+2):
+                    if ((i>=0 and i<8) and (j>=0 and j<8)) and chessplace[i][j] == 0:
                         pole[i][j]['image'] = ''
-                        
+
 # Проверка на правильность выбора фигуры и ход
 def check(i,x,y):
     global hod, ngo,x_last,y_last,last_color,last_image
@@ -126,7 +126,7 @@ def check(i,x,y):
             pole[x_last][y_last]['image'] = ''
             check_hod(x_last, y_last, chessplace[x][y], 1)
             ngo = 1
-            check_hod(x, y, chessplace[x][y], 2)
+            check_hod(x,y,chessplace[x][y], 2)
     else:
         mb.showerror(title="error", message="Неправильный ход")
 
@@ -311,20 +311,17 @@ def draw_chessboard(window):
     if chessplace[x_wking][y_wking] == 0:
         chessplace[x_wking][y_wking] = 2
         pole[x_wking][y_wking]['image'] = img4
-        check_hod(x_wking,y_wking,chessplace[x_wking][y_wking],2)
     else:
         chessplace[x_wking+1][y_wking] = 2
         pole[x_wking+1][y_wking]['image'] = img4
-        check_hod(x_wking+1, y_wking, chessplace[x_wking][y_wking], 2)
     # Черный король
     if chessplace[x_bking][y_bking] == 0:
         chessplace[x_bking][y_bking] = -2
         pole[x_bking][y_bking]['image'] = img3
-        check_hod(x_bking, y_bking, chessplace[x_bking][y_bking], 2)
     else:
         chessplace[x_bking + 1][y_bking] = -2
         pole[x_bking+1][y_bking]['image'] = img3
-        check_hod(x_bking + 1, y_bking, chessplace[x_bking][y_bking], 2)
     chessboard.mainloop()
 root.resizable(width=False, height=False)
 root.mainloop()
+    chessboard.mainloop()
