@@ -197,10 +197,10 @@ def draw_chessboard(window, result):
     img3 = PhotoImage(master= canvas_board,file="img30.png") # Белый король
     img4 = PhotoImage(master= canvas_board,file="img40.png") # Черный король
     # Начальное расположение
-    x_wking = random.randint(0, 7)
-    y_wking = random.randint(0, 7)
-    x_bking = random.randint(0, 7)
-    y_bking = random.randint(0, 7)
+    x_wking = random.randint(1, 6)
+    y_wking = random.randint(1, 6)
+    x_bking = random.randint(1, 6)
+    y_bking = random.randint(1, 6)
     x_wrook = random.randint(0, 7)
     y_wrook = random.randint(0, 7)
     x_brook = random.randint(0, 7)
@@ -287,8 +287,10 @@ def check_hod(x,y,k,clear):
                     if ((i>=0 and i<8) and (j>=0 and j<8)) and chessplace[i][j] == 0:
                         pole[i][j]['image'] = ''
 
+# Определение результата игры
 def result(chessboard, end_of_play):
     global end
+    # 8 шахов, победа черных
     if count_wcheck == 8:
         chessboard.destroy()
         end = Tk()
@@ -304,6 +306,7 @@ def result(chessboard, end_of_play):
         end.grab_set()
         end.resizable(width=False, height=False)
         end.mainloop()
+    # 8 шахов, победа белых
     elif count_bcheck == 8:
         chessboard.destroy()
         end = Tk()
@@ -320,6 +323,7 @@ def result(chessboard, end_of_play):
         end.resizable(width=False, height=False)
         end.mainloop()
 
+# Завершение игры
 def end_of_play(end):
     end.destroy()
 
@@ -398,15 +402,15 @@ def check_and_mate():
                         result(chessboard, end_of_play)
                 # По горизонтали
                 for i2 in range(x+1, 8):
-                    if (i2>=0 and i2<8) and chessplace[i2][j] == -1:
-                        mb.showinfo(title="whitecheck", message="Шах белым")
-                        count_wcheck += 1
-                        result(chessboard, end_of_play)
+                        if (i2>=0 and i2<8) and chessplace[i2][j] == -1:
+                            mb.showinfo(title="whitecheck", message="Шах белым")
+                            count_wcheck += 1
+                            result(chessboard, end_of_play)
                 for i3 in range(x-1, 0-1, -1):
-                    if (i3>=0 and i3<8) and chessplace[i3][j] == -1:
-                        mb.showinfo(title="whitecheck", message="Шах белым")
-                        count_wcheck += 1
-                        result(chessboard, end_of_play)
+                        if (i3>=0 and i3<8) and chessplace[i3][j] == -1:
+                            mb.showinfo(title="whitecheck", message="Шах белым")
+                            count_wcheck += 1
+                            result(chessboard, end_of_play)
             # Для черного короля
             elif chessplace[x][j] == -2:
                 # По вертикали
