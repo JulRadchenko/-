@@ -408,48 +408,88 @@ def check_and_mate():
                 # По вертикали
                 for i in range(j+1,8):
                     if (i>=0 and i<8) and chessplace[x][i] == -1:
-                        mb.showinfo(title="whitecheck", message="Шах белым")
-                        count_wcheck += 1
-                        result(chessboard, end_of_play)
+                        if chessplace[x][j+1] != 1 and chessplace[x][j+1] != -2 \
+                                and chessplace[x][j+2] != 1 and chessplace[x][j+2] != -2\
+                                and chessplace[x][j+3] != 1 and chessplace[x][j+3] != -2\
+                                and chessplace[x][j+4] != 1 and chessplace[x][j+4] != -2\
+                                and chessplace[x][j+5] != 1 and chessplace[x][j+5] != -2:
+                            mb.showinfo(title="whitecheck", message="Шах белым")
+                            count_wcheck += 1
+                            result(chessboard, end_of_play)
                 for i1 in range(j-1, 0-1, -1):
                     if (i1 >= 0 and i1 < 8) and chessplace[x][i1] == -1:
-                        mb.showinfo(title="whitecheck", message="Шах белым")
-                        count_wcheck += 1
-                        result(chessboard, end_of_play)
+                        if chessplace[x][j-1] != 1 and chessplace[x][j-1] != -2\
+                                and chessplace[x][j-2] != 1 and chessplace[x][j-2] != -2\
+                                and chessplace[x][j-3] != 1 and chessplace[x][j-3] != -2\
+                                and chessplace[x][j-4] != 1 and chessplace[x][j-4] != -2\
+                                and chessplace[x][j-5] != 1 and chessplace[x][j-5] != -2:
+                            mb.showinfo(title="whitecheck", message="Шах белым")
+                            count_wcheck += 1
+                            result(chessboard, end_of_play)
                 # По горизонтали
                 for i2 in range(x+1, 8):
                     if (i2>=0 and i2<8) and chessplace[i2][j] == -1:
-                        mb.showinfo(title="whitecheck", message="Шах белым")
-                        count_wcheck += 1
-                        result(chessboard, end_of_play)
+                        if chessplace[x+1][j] != 1 and chessplace[x+1][j] != -2\
+                                and chessplace[x+2][j] != 1 and chessplace[x+2][j] != -2\
+                                and chessplace[x+3][j] != 1 and chessplace[x+3][j] != -2\
+                                and chessplace[x+4][j] != 1 and chessplace[x+4][j] != -2\
+                                and chessplace[x+5][j] != 1 and chessplace[x+5][j] != -2:
+                            mb.showinfo(title="whitecheck", message="Шах белым")
+                            count_wcheck += 1
+                            result(chessboard, end_of_play)
                 for i3 in range(x-1, 0-1, -1):
                     if (i3>=0 and i3<8) and chessplace[i3][j] == -1:
-                        mb.showinfo(title="whitecheck", message="Шах белым")
-                        count_wcheck += 1
-                        result(chessboard, end_of_play)
+                        if chessplace[x-1][j] != 1 and chessplace[x-1][j] != -2\
+                                and chessplace[x-2][j] != 1 and chessplace[x-2][j] != -2\
+                                and chessplace[x-3][j] != 1 and chessplace[x-3][j] != -2\
+                                and chessplace[x-4][j] != 1 and chessplace[x-4][j] != -2\
+                                and chessplace[x-5][j] != 1 and chessplace[x-5][j] != -2:
+                            mb.showinfo(title="whitecheck", message="Шах белым")
+                            count_wcheck += 1
+                            result(chessboard, end_of_play)
             elif chessplace[x][j] == -2:  # Для черного короля
                 # По вертикали
                 for i in range(j+1,8):
                     if (i>=0 and i<8) and chessplace[x][i] == 1:
-                        mb.showinfo(title="whitecheck", message="Шах черным")
-                        count_bcheck += 1
-                        result(chessboard, end_of_play)
+                        if chessplace[x][j+1] != -1 and chessplace[x][j+1] != 2 \
+                                and chessplace[x][j+2] != -1 and chessplace[x][j+2] != 2 \
+                                and chessplace[x][j+3] != -1 and chessplace[x][j+3] != 2 \
+                                and chessplace[x][j+4] != -1 and chessplace[x][j+4] != 2 \
+                                and chessplace[x][j+5] != -1 and chessplace[x][j+5] != 2:
+                            mb.showinfo(title="whitecheck", message="Шах черным")
+                            count_bcheck += 1
+                            result(chessboard, end_of_play)
                 for i1 in range(j-1, 0-1, -1):
                     if (i1 >= 0 and i1 < 8) and chessplace[x][i1] == 1:
-                        mb.showinfo(title="whitecheck", message="Шах черным")
-                        count_bcheck += 1
-                        result(chessboard, end_of_play)
+                        if chessplace[x][j-1] != -1 and chessplace[x][j-1] != 2 \
+                                and chessplace[x][j-2] != -1 and chessplace[x][j-2] != 2 \
+                                and chessplace[x][j-3] != -1 and chessplace[x][j-3] != 2 \
+                                and chessplace[x][j-4] != -1 and chessplace[x][j-4] != 2 \
+                                and chessplace[x][j-5] != -1 and chessplace[x][j-5] != 2:
+                            mb.showinfo(title="whitecheck", message="Шах черным")
+                            count_bcheck += 1
+                            result(chessboard, end_of_play)
                 # По горизонтали
                 for i2 in range(x+1,8):
                     if (i2>=0 and i2<8) and chessplace[i2][j] == 1:
-                        mb.showinfo(title="whitecheck", message="Шах черным")
-                        count_bcheck += 1
-                        result(chessboard, end_of_play)
+                        if chessplace[x+1][j] != -1 and chessplace[x+1][j] != 2 \
+                                and chessplace[x+2][j] != -1 and chessplace[x+2][j] != 2 \
+                                and chessplace[x+3][j] != -1 and chessplace[x+3][j] != 2 \
+                                and chessplace[x+4][j] != -1 and chessplace[x+4][j] != 2 \
+                                and chessplace[x+5][j] != -1 and chessplace[x+5][j] != 2:
+                            mb.showinfo(title="whitecheck", message="Шах черным")
+                            count_bcheck += 1
+                            result(chessboard, end_of_play)
                 for i3 in range(x-1, 0-1, -1):
                     if (i3>=0 and i3<8) and chessplace[i3][j] == 1:
-                        mb.showinfo(title="whitecheck", message="Шах черным")
-                        count_bcheck += 1
-                        result(chessboard, end_of_play)
+                        if chessplace[x-1][j] != -1 and chessplace[x-1][j] != 2 \
+                                and chessplace[x-2][j] != -1 and chessplace[x-2][j] != 2 \
+                                and chessplace[x-3][j] != -1 and chessplace[x-3][j] != 2 \
+                                and chessplace[x-4][j] != -1 and chessplace[x-4][j] != 2 \
+                                and chessplace[x-5][j] != -1 and chessplace[x-5][j] != 2:
+                            mb.showinfo(title="whitecheck", message="Шах черным")
+                            count_bcheck += 1
+                            result(chessboard, end_of_play)
 
 root.resizable(width=False, height=False)
 root.mainloop()
