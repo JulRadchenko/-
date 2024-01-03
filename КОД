@@ -22,7 +22,8 @@ y_last = 0
 x_last= 0
 count_wcheck = 0
 count_bcheck = 0
-sum_pole = 0
+sum_bel = 0
+sum_cher = 0
 
 # Массив моделирования игрового поля
 global chessplace
@@ -98,7 +99,7 @@ def au_login_and_password_error():
                 img = PhotoImage(file="bckgrimg.png")
                 image = canvas.create_image(200, 200, image = img)
                 canvas.create_text(200, 200, text='Вы успешно авторизированы!', font='30')
-                button_w = Button(window, text='Начать игру', command= lambda: draw_chessboard(window, white_win, black_win))
+                button_w = Button(window, text='Начать игру', command= lambda: draw_chessboard(window, white_win, black_win, gamedraw))
                 button_w = canvas.create_window(200, 250, window=button_w)
                 window.grab_set()
                 window.resizable(width=False, height=False)
@@ -136,7 +137,7 @@ def reg_login_and_password_error():
 entry_regist_and_login()
 
 # Отрисовка игрового поля
-def draw_chessboard(window, white_win, black_win):
+def draw_chessboard(window, white_win, black_win, gamedraw):
     global poz_cher_x,poz_cher_y,poz_bel_x,poz_bel_y
     window.destroy()
     global chessboard
@@ -315,7 +316,7 @@ def check_figure(i,x,y):
                 mb.showerror(title="error", message="Сейчас ходят черные")
     # Второе нажатие
     elif ngo == 2 and pole[x][y]['image']!='':
-        global sum_pole
+        global sum_bel, sum_cher
         if pole[x][y]['image'] == str(circle):
             chessplace[x][y] = chessplace[x_last][y_last]
             chessplace[x_last][y_last] = 0
@@ -331,35 +332,33 @@ def check_figure(i,x,y):
             pole[x][y]['image'] = last_image
             pole[x_last][y_last]['image'] = ''
             check_hod(x_last, y_last, chessplace[x][y], 1)
-            sum_pole += 1
+            sum_cher -= 1
             ngo = 1
             check_hod(x,y,chessplace[x][y], 2)
-            result(white_win, black_win)
+            result(white_win, black_win, gamedraw)
         elif hod == 1 and chessplace[x][y] == 1: # Съесть белую ладью
             chessplace[x][y] = chessplace[x_last][y_last]
             chessplace[x_last][y_last] = 0
             pole[x][y]['image'] = last_image
             pole[x_last][y_last]['image'] = ''
             check_hod(x_last, y_last, chessplace[x][y], 1)
-            sum_pole -= 1
+            sum_bel -= 1
             ngo = 1
             check_hod(x, y, chessplace[x][y], 2)
-            result(white_win, black_win)
+            result(white_win, black_win, gamedraw)
     else:
         mb.showerror(title="error", message="Неправильный ход")
 
 # Определение результата игры
-def result(white_win, black_win):
+def result(white_win, black_win, gamedraw):
     global end
-    if count_wcheck == 8: # 8 шахов, победа черных
+    if count_wcheck == 10: # 10 шахов, победа черных
         black_win(chessboard, end_of_play, result)
-    elif count_bcheck == 8: # 8 шахов, победа белых
+    elif count_bcheck == 10: # 10 шахов, победа белых
         white_win(chessboard, end_of_play, result)
     global sum_pole
-    if sum_pole == -1: # Съедена белая ладья, победа черных
-        black_win(chessboard, end_of_play, result)
-    elif sum_pole == 1: # Съедена черная ладья, победа белых
-        white_win(chessboard, end_of_play, result)
+    if sum_cher == -1 and sum_bel == -1: # Съедены белая и черная ладьи, ничья
+        gamedraw(chessboard, end_of_play, result)
 
 # Вывод результата игры, победа белых
 def white_win(chessboard, end_of_play, result):
@@ -395,6 +394,23 @@ def black_win(chessboard, end_of_play, result):
     end.resizable(width=False, height=False)
     end.mainloop()
 
+# Вывод результата игры, ничья
+def gamedraw(chessboard, end_of_play, result):
+    chessboard.destroy()
+    end = Tk()
+    end.title("Игра завершена")
+    end.geometry("400x400")
+    canvas = Canvas(end, width=400, height=400)
+    canvas.pack(fill="both", expand=True)
+    img = PhotoImage(file="end.png")
+    image = canvas.create_image(200, 200, image=img)
+    canvas.create_text(200, 200, text='Ничья!')
+    button_e = Button(end, text='Завершить игру', command=lambda: end_of_play(end))
+    button_e = canvas.create_window(200, 250, window=button_e)
+    end.grab_set()
+    end.resizable(width=False, height=False)
+    end.mainloop()
+
 # Завершение игры
 def end_of_play(end):
     end.destroy()
@@ -402,8 +418,8 @@ def end_of_play(end):
 # Проверка на шах
 def check_and_mate():
     global count_wcheck, count_bcheck
-    for x in range(1,8):
-        for j in range(1,8):
+    for x in range(1,9):
+        for j in range(1,9):
             if chessplace[x][j] == 2:  # Для белого короля
                 # По вертикали
                 for i in range(j+1,8):
@@ -415,7 +431,7 @@ def check_and_mate():
                                 and chessplace[x][j+5] != 1 and chessplace[x][j+5] != -2:
                             mb.showinfo(title="whitecheck", message="Шах белым")
                             count_wcheck += 1
-                            result(chessboard, end_of_play)
+                            result(white_win, black_win, gamedraw)
                 for i1 in range(j-1, 0-1, -1):
                     if (i1 >= 0 and i1 < 8) and chessplace[x][i1] == -1:
                         if chessplace[x][j-1] != 1 and chessplace[x][j-1] != -2\
@@ -425,7 +441,7 @@ def check_and_mate():
                                 and chessplace[x][j-5] != 1 and chessplace[x][j-5] != -2:
                             mb.showinfo(title="whitecheck", message="Шах белым")
                             count_wcheck += 1
-                            result(chessboard, end_of_play)
+                            result(white_win, black_win, gamedraw)
                 # По горизонтали
                 for i2 in range(x+1, 8):
                     if (i2>=0 and i2<8) and chessplace[i2][j] == -1:
@@ -436,7 +452,7 @@ def check_and_mate():
                                 and chessplace[x+5][j] != 1 and chessplace[x+5][j] != -2:
                             mb.showinfo(title="whitecheck", message="Шах белым")
                             count_wcheck += 1
-                            result(chessboard, end_of_play)
+                            result(white_win, black_win, gamedraw)
                 for i3 in range(x-1, 0-1, -1):
                     if (i3>=0 and i3<8) and chessplace[i3][j] == -1:
                         if chessplace[x-1][j] != 1 and chessplace[x-1][j] != -2\
@@ -446,7 +462,7 @@ def check_and_mate():
                                 and chessplace[x-5][j] != 1 and chessplace[x-5][j] != -2:
                             mb.showinfo(title="whitecheck", message="Шах белым")
                             count_wcheck += 1
-                            result(chessboard, end_of_play)
+                            result(white_win, black_win, gamedraw)
             elif chessplace[x][j] == -2:  # Для черного короля
                 # По вертикали
                 for i in range(j+1,8):
@@ -458,7 +474,7 @@ def check_and_mate():
                                 and chessplace[x][j+5] != -1 and chessplace[x][j+5] != 2:
                             mb.showinfo(title="whitecheck", message="Шах черным")
                             count_bcheck += 1
-                            result(chessboard, end_of_play)
+                            result(white_win, black_win, gamedraw)
                 for i1 in range(j-1, 0-1, -1):
                     if (i1 >= 0 and i1 < 8) and chessplace[x][i1] == 1:
                         if chessplace[x][j-1] != -1 and chessplace[x][j-1] != 2 \
@@ -468,7 +484,7 @@ def check_and_mate():
                                 and chessplace[x][j-5] != -1 and chessplace[x][j-5] != 2:
                             mb.showinfo(title="whitecheck", message="Шах черным")
                             count_bcheck += 1
-                            result(chessboard, end_of_play)
+                            result(white_win, black_win, gamedraw)
                 # По горизонтали
                 for i2 in range(x+1,8):
                     if (i2>=0 and i2<8) and chessplace[i2][j] == 1:
@@ -479,7 +495,7 @@ def check_and_mate():
                                 and chessplace[x+5][j] != -1 and chessplace[x+5][j] != 2:
                             mb.showinfo(title="whitecheck", message="Шах черным")
                             count_bcheck += 1
-                            result(chessboard, end_of_play)
+                            result(white_win, black_win, gamedraw)
                 for i3 in range(x-1, 0-1, -1):
                     if (i3>=0 and i3<8) and chessplace[i3][j] == 1:
                         if chessplace[x-1][j] != -1 and chessplace[x-1][j] != 2 \
@@ -489,7 +505,8 @@ def check_and_mate():
                                 and chessplace[x-5][j] != -1 and chessplace[x-5][j] != 2:
                             mb.showinfo(title="whitecheck", message="Шах черным")
                             count_bcheck += 1
-                            result(chessboard, end_of_play)
+                            result(white_win, black_win, gamedraw)
 
 root.resizable(width=False, height=False)
 root.mainloop()
+
