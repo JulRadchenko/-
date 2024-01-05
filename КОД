@@ -21,6 +21,8 @@ y_last = 0
 x_last= 0
 count_wcheck = 0
 count_bcheck = 0
+wcheck = 0
+bcheck = 0
 sum_bel = 0
 sum_cher = 0
 
@@ -429,8 +431,8 @@ def check_and_mate():
                         elif chessplace[x][i] == -1 and whitefigure == 0:
                             mb.showinfo(title="whitecheck", message="Шах белым")
                             count_wcheck += 1
+                            wcheck = 1
                             result(white_win, black_win, gamedraw)
-                            return
                 whitefigure = 0
                 for i1 in range(j-1, 0-1, -1):
                     if (i1>=0 and i1<8):
@@ -439,8 +441,8 @@ def check_and_mate():
                         elif chessplace[x][i1] == -1 and whitefigure == 0:
                             mb.showinfo(title="whitecheck", message="Шах белым")
                             count_wcheck += 1
+                            wcheck = 1
                             result(white_win, black_win, gamedraw)
-                            return
                 # По вертикали
                 whitefigure = 0
                 for i2 in range(x+1, 8):
@@ -450,8 +452,8 @@ def check_and_mate():
                         elif chessplace[i2][j] == -1 and whitefigure == 0:
                             mb.showinfo(title="whitecheck", message="Шах белым")
                             count_wcheck += 1
+                            wcheck = 1
                             result(white_win, black_win, gamedraw)
-                            return
                 whitefigure = 0
                 for i3 in range(x-1, 0-1, -1):
                     if (i3>=0 and i3<8):
@@ -460,8 +462,8 @@ def check_and_mate():
                         elif chessplace[i3][j] == -1 and whitefigure == 0:
                             mb.showinfo(title="whitecheck", message="Шах белым")
                             count_wcheck += 1
+                            wcheck = 1
                             result(white_win, black_win, gamedraw)
-                            return
             elif chessplace[x][j] == -2:  # Для черного короля
                 # По горизонтали
                 blackfigure = 0
@@ -472,8 +474,8 @@ def check_and_mate():
                         elif chessplace[x][i] == 1 and blackfigure == 0:
                             mb.showinfo(title="blackcheck", message="Шах черным")
                             count_bcheck += 1
+                            bcheck = 1
                             result(white_win, black_win, gamedraw)
-                            return
                 blackfigure = 0
                 for i1 in range(j-1, 0-1, -1):
                     if (i1>=0 and i1<8):
@@ -482,8 +484,8 @@ def check_and_mate():
                         elif chessplace[x][i1] == 1 and blackfigure == 0:
                             mb.showinfo(title="blackcheck", message="Шах черным")
                             count_bcheck += 1
+                            bcheck = 1
                             result(white_win, black_win, gamedraw)
-                            return
                 # По вертикали
                 blackfigure = 0
                 for i2 in range(x+1, 8):
@@ -493,8 +495,8 @@ def check_and_mate():
                         elif chessplace[i2][j] == 1 and blackfigure == 0:
                             mb.showinfo(title="blackcheck", message="Шах черным")
                             count_bcheck += 1
+                            bcheck = 1
                             result(white_win, black_win, gamedraw)
-                            return
                 blackfigure = 0
                 for i3 in range(x-1, 0-1, -1):
                     if (i3>=0 and i3<8):
@@ -503,8 +505,8 @@ def check_and_mate():
                         elif chessplace[i3][j] == 1 and blackfigure == 0:
                             mb.showinfo(title="blackcheck", message="Шах черным")
                             count_bcheck += 1
+                            bcheck = 1
                             result(white_win, black_win, gamedraw)
-                            return
 
 root.resizable(width=False, height=False)
 root.mainloop()
