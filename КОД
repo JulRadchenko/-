@@ -17,17 +17,23 @@ bg = PhotoImage(file="backgrimage.png")
 
 hod = 1
 ngo = 1
+a = 0
+b = 0
+rook_x = 0
+rook_y = 0
 y_last = 0
 x_last= 0
 count_wcheck = 0
 count_bcheck = 0
 wcheck = 0
-bcheck = 0
+ubcheck = 0
+dbcheck = 0
+lbcheck = 0
+rbcheck = 0
 sum_bel = 0
 sum_cher = 0
 
-# Массив моделирования игрового поля
-global chessplace
+global chessplace # Массив моделирования игрового поля
 chessplace = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
@@ -36,7 +42,7 @@ chessplace = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0]]
-global pole
+global pole 
 pole = [[0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
@@ -46,8 +52,7 @@ pole = [[0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0]]
 
-# Ввод логина и пароля в окне регистрации и авторизации
-def entry_regist_and_login():
+def entry_regist_and_login(): # Ввод логина и пароля в окне регистрации и авторизации
     # Регистрация
     canvas = Canvas(root, width=400, height=400)
     canvas.pack(fill="both", expand=True)
@@ -72,8 +77,7 @@ def entry_regist_and_login():
     button_r = Button(root, text='Авторизироваться', command=au_login_and_password_error, bg='#FFFFFF')
     button_r = canvas.create_window(145, 350, anchor="nw", window=button_r)
 
-# Проверка на ошибку авторизации
-def au_login_and_password_error():
+def au_login_and_password_error(): # Проверка на ошибку авторизации
     if (len(au_login.get()) == 0 or len(au_password.get()) == 0) or (
             len(au_login.get()) == 0 and len(au_password.get()) == 0) or au_login.get().count(' ') > 0 or \
             au_password.get().count(' ') > 0:
@@ -83,13 +87,11 @@ def au_login_and_password_error():
         while TRUE:
             line = file.readline()
             line = line.split()
-            # Ошибка авторизации
-            if len(line) == 0:
+            if len(line) == 0: # Ошибка авторизации
                 file.close()
                 mb.showerror("Ошибка", "Неверные логин или пароль")
                 break
-            # Успешная авторизация
-            elif line[0] == au_login.get() and line[1] == au_password.get():
+            elif line[0] == au_login.get() and line[1] == au_password.get(): # Успешная авторизация
                 file.close()
                 root.destroy()
                 window = Tk()
@@ -107,8 +109,7 @@ def au_login_and_password_error():
                 window.mainloop()
                 break
 
-# Проверка на ошибку регистрации
-def reg_login_and_password_error():
+def reg_login_and_password_error(): # Проверка на ошибку регистрации
     # Проверка на пустое поле
     if (len(reg_login.get()) == 0 or len(reg_password.get()) == 0) or (
         len(reg_login.get()) == 0 and len(reg_password.get()) == 0) or reg_login.get().count(' ') > 0 or \
@@ -122,13 +123,11 @@ def reg_login_and_password_error():
         while TRUE:
             line = file.readline()
             line = line.split()
-            # Проверка на совпадение логина и пароля
-            if len(line) > 0 and line[0] == reg_login.get() and line[1] == reg_password.get():
+            if len(line) > 0 and line[0] == reg_login.get() and line[1] == reg_password.get(): # Проверка на совпадение логина и пароля
                 file.close()
                 mb.showerror("Ошибка", "Логин и пароль уже существуют")
                 break
-            # Успешня регистрация
-            else:
+            else:  # Успешня регистрация
                 file.close()
                 file = open('reg_login.txt', 'a+')
                 file.write(reg_login.get() + ' ' + reg_password.get() + '\n')
@@ -137,8 +136,7 @@ def reg_login_and_password_error():
                 break
 entry_regist_and_login()
 
-# Отрисовка игрового поля
-def draw_chessboard(window, white_win, black_win, gamedraw):
+def draw_chessboard(window, white_win, black_win, gamedraw): # Отрисовка игрового поля
     global poz_cher_x,poz_cher_y,poz_bel_x,poz_bel_y
     window.destroy()
     global chessboard
@@ -173,8 +171,7 @@ def draw_chessboard(window, white_win, black_win, gamedraw):
     worb = 0
     row = 0
     col = 0
-    # Определение цвета клетки
-    for i in range(8):
+    for i in range(8): # Определение цвета клетки
         for j in range(8):
             worb += 1
             if i % 2 == 0:
@@ -208,30 +205,25 @@ def draw_chessboard(window, white_win, black_win, gamedraw):
     y_wrook = random.randint(0, 7)
     x_brook = random.randint(0, 7)
     y_brook = random.randint(0, 7)
-    # Выставление веса фигур и картинок
-    # Белая ладья
-    if chessplace[x_wrook][y_wrook] == 0:
+    if chessplace[x_wrook][y_wrook] == 0: # Белая ладья
         chessplace[x_wrook][y_wrook] = 1
         pole[x_wrook][y_wrook]['image'] = img1
     else:
         chessplace[x_wrook + 1][y_wrook] = 1
         pole[x_wrook + 1][y_wrook]['image'] = img1
-    # Черная ладья
-    if chessplace[x_brook][y_brook] == 0:
+    if chessplace[x_brook][y_brook] == 0: # Черная ладья
         chessplace[x_brook][y_brook] = -1
         pole[x_brook][y_brook]['image'] = img2
     else:
         chessplace[x_brook+1][y_brook] = -1
         pole[x_brook+1][y_brook]['image'] = img2
-    # Белый король
-    if chessplace[x_wking][y_wking] == 0:
+    if chessplace[x_wking][y_wking] == 0: # Белый король
         chessplace[x_wking][y_wking] = 2
         pole[x_wking][y_wking]['image'] = img4
     else:
         chessplace[x_wking+1][y_wking] = 2
         pole[x_wking+1][y_wking]['image'] = img4
-    # Черный король
-    if chessplace[x_bking][y_bking] == 0:
+    if chessplace[x_bking][y_bking] == 0: # Черный король
         chessplace[x_bking][y_bking] = -2
         pole[x_bking][y_bking]['image'] = img3
     else:
@@ -239,11 +231,9 @@ def draw_chessboard(window, white_win, black_win, gamedraw):
         pole[x_bking+1][y_bking]['image'] = img3
     chessboard.mainloop()
 
-# Проверка на правильность хода
-def check_hod(x,y,k,clear):
-    # Установка подсказок
-    if clear == 0:
-        if k == 1 or k == -1: # Ладья
+def check_hod(x,y,k,clear): # Проверка на правильность хода
+    if clear == 0: # Установка подсказок
+        if k == 1: # Ладья
             for i in range(y+1, 8): # Ход вправо
                 if (i>=0 and i<8) and pole[x][i]['image'] == '':
                     pole[x][i]['image'] = circle
@@ -264,14 +254,13 @@ def check_hod(x,y,k,clear):
                     pole[i3][y]['image'] = circle
                 elif (i3>=0 and i3<8) and pole[i3][y]['image'] != '':
                     break
-        elif k == 2 or k == -2: # Король
+        elif k == 2: # Король
             for i in range(x-1, x+2):
                 for j in range(y-1, y+2):
                     if ((i>=0 and i<8) and (j>=0 and j<8)) and pole[i][j]['image'] == '':
                         pole[i][j]['image'] = circle
-    # Удаление подсказок
-    elif clear == 1:
-        if k == 1 or k == -1: # Ладья
+    elif clear == 1: # Удаление подсказок
+        if k == 1: # Ладья
             for i in range(y+1, 8): # Ход вправо
                 if (i>=0 and i<8) and chessplace[x][i] == 0:
                     pole[x][i]['image'] = ''
@@ -284,19 +273,123 @@ def check_hod(x,y,k,clear):
             for i3 in range(x-1, 0 - 1, -1): # Ход вниз
                 if (i3>=0 and i3<8) and chessplace[i3][y] == 0:
                     pole[i3][y]['image'] = ''
-        elif k == 2 or k == -2: # Король
+        elif k == 2: # Король
             for i in range(x-2, x+2):
                 for j in range(y-2, y+2):
                     if ((i>=0 and i<8) and (j>=0 and j<8)) and chessplace[i][j] == 0:
                         pole[i][j]['image'] = ''
+    elif clear == 3: # Бот, ходы черных фигур
+        global hod,x_last,y_last,last_image, a, b
+        if x_last != 7 and y_last != 7:
+            print('1)', x,y, a, b)
+            if chessplace[x_last+1][y_last+1] != 2 and chessplace[x+1][y+1] != -1:
+                chessplace[x+1][y+1] = chessplace[x_last][y_last]
+                chessplace[x_last][y_last] = 0
+                pole[x_last+1][y_last+1]['image'] = last_image
+                pole[x_last][y_last]['image'] = ''
+                hod -= 1
+                check_and_mate()
+            else:
+                chessplace[x_last+1][y_last] = chessplace[x_last][y_last]
+                chessplace[x_last][y_last] = 0
+                pole[x_last+1][y_last]['image'] = last_image
+                pole[x_last][y_last]['image'] = ''
+                hod -= 1
+                check_and_mate()
+        else:
+            print('2)',x,y, a, b)
+            if (x_last == 7 and y_last == 7 and b == y_last) or (x_last == 7 and y_last != 7 and b == y_last) \
+                    or (y_last == 7 and x_last != 7 and b == y_last):
+                if chessplace[x_last][y_last-1] != 2 and chessplace[x_last][y_last-1] != -1:
+                    chessplace[x_last][y_last-1] = chessplace[x_last][y_last]
+                    chessplace[x_last][y_last] = 0
+                    pole[x_last][y_last-1]['image'] = last_image
+                    pole[x_last][y_last]['image'] = ''
+                    hod -= 1
+                    check_and_mate()
+                else:
+                    chessplace[x_last-1][y_last-1] = chessplace[x_last][y_last]
+                    chessplace[x_last][y_last] = 0
+                    pole[x_last-1][y_last-1]['image'] = last_image
+                    pole[x_last][y_last]['image'] = ''
+                    hod -= 1
+                    check_and_mate()
+            elif (x_last == 7 and y_last == 7 and a == x_last) or (x_last == 7 and y_last != 7 and a == x_last) \
+                    or (y_last == 7 and x_last != 7 and a == x_last):
+                if chessplace[x_last-1][y_last] != 2 and chessplace[x_last-1][y_last] != -1:
+                    chessplace[x_last-1][y_last] = chessplace[x_last][y_last]
+                    chessplace[x_last][y_last] = 0
+                    pole[x_last-1][y_last]['image'] = last_image
+                    pole[x_last][y_last]['image'] = ''
+                    hod -= 1
+                    check_and_mate()
+                else:
+                    chessplace[x_last-1][y_last-1] = chessplace[x_last][y_last]
+                    chessplace[x_last][y_last] = 0
+                    pole[x_last-1][y_last-1]['image'] = last_image
+                    pole[x_last][y_last]['image'] = ''
+                    hod -= 1
+                    check_and_mate()
+    elif clear == 4:
+        print('3)',x,y, a, b)
+        if x_last != 0 and y_last != 0:
+            if chessplace[x_last-1][y_last-1] != 2 and chessplace[x_last-1][y_last-1] != -1:
+                chessplace[x_last-1][y_last-1] = chessplace[x_last][y_last]
+                chessplace[x_last][y_last] = 0
+                pole[x_last-1][y_last-1]['image'] = last_image
+                pole[x_last][y_last]['image'] = ''
+                hod -= 1
+                check_and_mate()
+            else:
+                chessplace[x_last][y_last-1] = chessplace[x_last][y_last]
+                chessplace[x_last][y_last] = 0
+                pole[x_last][y_last-1]['image'] = last_image
+                pole[x_last][y_last]['image'] = ''
+                hod -= 1
+                check_and_mate()
+        else:
+            print('4)',x,y, a, b)
+            if (x_last == 0 and y_last == 0 and b == y_last) or (y_last == 0 and x_last != 0 and b == y_last) \
+                    or (x_last == 0 and y_last != 0 and b == y_last):
+                if chessplace[x_last][y_last+1] != 2 and chessplace[x_last][y_last+1] != -1:
+                    chessplace[x_last][y_last+1] = chessplace[x_last][y_last]
+                    chessplace[x_last][y_last] = 0
+                    pole[x_last][y_last+1]['image'] = last_image
+                    pole[x_last][y_last]['image'] = ''
+                    hod -= 1
+                    check_and_mate()
+                else:
+                    chessplace[x_last+1][y_last+1] = chessplace[x_last][y_last]
+                    chessplace[x_last][y_last] = 0
+                    pole[x_last+1][y_last+1]['image'] = last_image
+                    pole[x_last][y_last]['image'] = ''
+                    hod -= 1
+                    check_and_mate()
+            elif (x_last == 0 and y_last == 0 and a == x_last) or (y_last == 0 and x_last != 0 and a == x_last) \
+                    or (x_last == 0 and y_last != 1 and a == x_last):
+                if chessplace[x_last+1][y_last] != 2 and chessplace[x_last+1][y_last] != -1:
+                    chessplace[x_last+1][y_last] = chessplace[x_last][y_last]
+                    chessplace[x_last][y_last] = 0
+                    pole[x_last+1][y_last]['image'] = last_image
+                    pole[x_last][y_last]['image'] = ''
+                    hod -= 1
+                    check_and_mate()
+                else:
+                    chessplace[x_last+1][y_last+1] = chessplace[x_last][y_last]
+                    chessplace[x_last][y_last] = 0
+                    pole[x_last+1][y_last+1]['image'] = last_image
+                    pole[x_last][y_last]['image'] = ''
+                    hod -= 1
+                    check_and_mate()
 
-# Проверка на правильность выбора фигуры и ход
-def check_figure(i,x,y):
-    global hod, ngo,x_last,y_last,last_color,last_image
-    # Первое нажатие
-    if ngo == 1 and pole[x][y]['image']!='':
+def check_figure(i,x,y): # Проверка на правильность выбора фигуры и ход
+    global hod, ngo, x_last, y_last, last_image, ubcheck, dbcheck, lbcheck, rbcheck, wcheck, rook_x, rook_y, a, b
+    if ngo == 1 and pole[x][y]['image']!='': # Первое нажатие
         if hod == 1: # Ход белых
             if chessplace[x][y] == 1 or chessplace[x][y] == 2:
+                if chessplace[x][y] == 1:
+                    rook_x = x
+                    rook_y = y
                 ngo = 2
                 hod += 1
                 last_image = pole[x][y]['image']
@@ -306,17 +399,32 @@ def check_figure(i,x,y):
             else:
                 mb.showerror(title="error", message="Сейчас ходят белые")
         elif hod == 2: # Ход черных
-            if chessplace[x][y] == -1 or chessplace[x][y] == -2:
-                ngo = 2
-                last_image = pole[x][y]['image']
-                x_last = x
-                y_last = y
-                check_hod(x, y, chessplace[x][y], 0)
-                hod -= 1
-            else:
-                mb.showerror(title="error", message="Сейчас ходят черные")
-    # Второе нажатие
-    elif ngo == 2 and pole[x][y]['image']!='':
+            for a1 in range(0,8):
+                for b1 in range(0,8):
+                    if chessplace[a1][b1] == 1:
+                        a = a1
+                        b = b1
+            for x in range(0, 8):
+                for y in range(0, 8):
+                    if (ubcheck == 1 or lbcheck == 1) and chessplace[x][y] == -2:
+                        print(ubcheck,lbcheck)
+                        ubcheck = 0
+                        lbcheck = 0
+                        last_image = pole[x][y]['image']
+                        x_last = x
+                        y_last = y
+                        check_hod(x, y, -2, 3)
+                        return
+                    elif (dbcheck == 1 or rbcheck == 1) and chessplace[x][y] == -2:
+                        print(dbcheck, rbcheck)
+                        dbcheck = 0
+                        rbcheck = 0
+                        last_image = pole[x][y]['image']
+                        x_last = x
+                        y_last = y
+                        check_hod(x, y, -2, 4)
+                        return
+    elif ngo == 2 and pole[x][y]['image']!='': # Второе нажатие
         global sum_bel, sum_cher
         if pole[x][y]['image'] == str(circle):
             chessplace[x][y] = chessplace[x_last][y_last]
@@ -324,9 +432,9 @@ def check_figure(i,x,y):
             pole[x][y]['image'] = last_image
             pole[x_last][y_last]['image'] = ''
             check_hod(x_last, y_last, chessplace[x][y], 1)
-            ngo = 1
             check_hod(x,y,chessplace[x][y], 2)
             check_and_mate()
+            ngo = 1
         elif hod == 2 and chessplace[x][y] == -1: # Съесть черную ладью
             chessplace[x][y] = chessplace[x_last][y_last]
             chessplace[x_last][y_last] = 0
@@ -347,11 +455,11 @@ def check_figure(i,x,y):
             ngo = 1
             check_hod(x, y, chessplace[x][y], 2)
             result(white_win, black_win, gamedraw)
+        check_figure(i,x,y)
     else:
         mb.showerror(title="error", message="Неправильный ход")
 
-# Определение результата игры
-def result(white_win, black_win, gamedraw):
+def result(white_win, black_win, gamedraw): # Определение результата игры
     global end
     if count_wcheck == 40: # 10 шахов, победа черных
         black_win(chessboard, end_of_play, result)
@@ -361,8 +469,7 @@ def result(white_win, black_win, gamedraw):
     if sum_cher == -1 and sum_bel == -1: # Съедены белая и черная ладьи, ничья
         gamedraw(chessboard, end_of_play, result)
 
-# Вывод результата игры, победа белых
-def white_win(chessboard, end_of_play, result):
+def white_win(chessboard, end_of_play, result): # Вывод результата игры, победа белых
     chessboard.destroy()
     end = Tk()
     end.title("Игра завершена")
@@ -378,8 +485,7 @@ def white_win(chessboard, end_of_play, result):
     end.resizable(width=False, height=False)
     end.mainloop()
 
-# Вывод результата игры, победа черных
-def black_win(chessboard, end_of_play, result):
+def black_win(chessboard, end_of_play, result): # Вывод результата игры, победа черных
     chessboard.destroy()
     end = Tk()
     end.title("Игра завершена")
@@ -395,8 +501,7 @@ def black_win(chessboard, end_of_play, result):
     end.resizable(width=False, height=False)
     end.mainloop()
 
-# Вывод результата игры, ничья
-def gamedraw(chessboard, end_of_play, result):
+def gamedraw(chessboard, end_of_play, result): # Вывод результата игры, ничья
     chessboard.destroy()
     end = Tk()
     end.title("Игра завершена")
@@ -412,15 +517,13 @@ def gamedraw(chessboard, end_of_play, result):
     end.resizable(width=False, height=False)
     end.mainloop()
 
-# Завершение игры
-def end_of_play(end):
+def end_of_play(end): # Завершение игры
     end.destroy()
 
-# Проверка на шах
-def check_and_mate():
-    global count_wcheck, count_bcheck
-    for x in range(1,8):
-        for j in range(1,8):
+def check_and_mate(): # Проверка на шах
+    global count_wcheck, count_bcheck, ubcheck, dbcheck, lbcheck, rbcheck, wcheck
+    for x in range(0,8):
+        for j in range(0,8):
             if chessplace[x][j] == 2:  # Для белого короля
                 # По горизонтали
                 whitefigure = 0
@@ -474,7 +577,7 @@ def check_and_mate():
                         elif chessplace[x][i] == 1 and blackfigure == 0:
                             mb.showinfo(title="blackcheck", message="Шах черным")
                             count_bcheck += 1
-                            bcheck = 1
+                            rbcheck = 1
                             result(white_win, black_win, gamedraw)
                 blackfigure = 0
                 for i1 in range(j-1, 0-1, -1):
@@ -484,18 +587,18 @@ def check_and_mate():
                         elif chessplace[x][i1] == 1 and blackfigure == 0:
                             mb.showinfo(title="blackcheck", message="Шах черным")
                             count_bcheck += 1
-                            bcheck = 1
+                            lbcheck = 1
                             result(white_win, black_win, gamedraw)
                 # По вертикали
                 blackfigure = 0
                 for i2 in range(x+1, 8):
-                    if (i1 >= 0 and i1 < 8):
+                    if (i2 >= 0 and i2 < 8):
                         if chessplace[i2][j] == -1 or chessplace[i2][j] == 2:
                             blackfigure += 1
                         elif chessplace[i2][j] == 1 and blackfigure == 0:
                             mb.showinfo(title="blackcheck", message="Шах черным")
                             count_bcheck += 1
-                            bcheck = 1
+                            dbcheck = 1
                             result(white_win, black_win, gamedraw)
                 blackfigure = 0
                 for i3 in range(x-1, 0-1, -1):
@@ -505,7 +608,7 @@ def check_and_mate():
                         elif chessplace[i3][j] == 1 and blackfigure == 0:
                             mb.showinfo(title="blackcheck", message="Шах черным")
                             count_bcheck += 1
-                            bcheck = 1
+                            ubcheck = 1
                             result(white_win, black_win, gamedraw)
 
 root.resizable(width=False, height=False)
