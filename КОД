@@ -16,7 +16,7 @@ reg_login = StringVar()
 bg = PhotoImage(file="backgrimage.png")
 
 hod = 1; ngo = 1; a = 0; b = 0; rook_x = 0; rook_y = 0; y_last = 0; x_last= 0; count_wcheck = 0; count_bcheck = 0
-wcheck = 0; ubcheck = 0; dbcheck = 0; lbcheck = 0; rbcheck = 0; sum_bel = 0; sum_cher = 0
+wcheck = 0; ubcheck = 0; dbcheck = 0; lbcheck = 0; rbcheck = 0; sum_bel = 0; sum_cher = 0; blackcount = 0
 
 global chessplace # Массив моделирования игрового поля
 chessplace = [[0,0,0,0,0,0,0,0],
@@ -262,10 +262,28 @@ def check_hod(x,y,k,clear): # Проверка на правильность х�
                     if ((i>=0 and i<8) and (j>=0 and j<8)) and chessplace[i][j] == 0:
                         pole[i][j]['image'] = ''
     elif clear == 3: # Бот, ходы черных фигур
-        global hod,x_last,y_last,last_image, a, b
-        if x_last != 7 and y_last != 7:
+        global hod,x_last,y_last,last_image, a, b, sum_bel
+        if chessplace[x_last-1][y_last] == 1:
+            chessplace[x_last-1][y_last] = chessplace[x_last][y_last]
+            chessplace[x_last][y_last] = 0
+            pole[x_last-1][y_last]['image'] = last_image
+            pole[x_last][y_last]['image'] = ''
+            check_hod(x_last, y_last, chessplace[x][y], 1)
+            sum_bel -= 1
+            hod -= 1
+            check_hod(x, y, chessplace[x][y], 2)
+        elif chessplace[x_last][y_last-1] == 1:
+            chessplace[x_last][y_last-1] = chessplace[x_last][y_last]
+            chessplace[x_last][y_last] = 0
+            pole[x_last][y_last-1]['image'] = last_image
+            pole[x_last][y_last]['image'] = ''
+            check_hod(x_last, y_last, chessplace[x][y], 1)
+            sum_bel -= 1
+            hod -= 1
+            check_hod(x, y, chessplace[x][y], 2)
+        elif x_last != 7 and y_last != 7 and chessplace[x_last][y_last-1] != 1 and chessplace[x_last-1][y_last] != 1:
             if chessplace[x_last+1][y_last+1] != 2 and chessplace[x+1][y+1] != -1:
-                chessplace[x+1][y+1] = chessplace[x_last][y_last]
+                chessplace[x_last+1][y_last+1] = chessplace[x_last][y_last]
                 chessplace[x_last][y_last] = 0
                 pole[x_last+1][y_last+1]['image'] = last_image
                 pole[x_last][y_last]['image'] = ''
@@ -312,7 +330,25 @@ def check_hod(x,y,k,clear): # Проверка на правильность х�
                     hod -= 1
                     check_and_mate()
     elif clear == 4:
-        if x_last != 0 and y_last != 0:
+        if chessplace[x_last+1][y_last] == 1:
+            chessplace[x_last+1][y_last] = chessplace[x_last][y_last]
+            chessplace[x_last][y_last] = 0
+            pole[x_last+1][y_last]['image'] = last_image
+            pole[x_last][y_last]['image'] = ''
+            check_hod(x_last, y_last, chessplace[x][y], 1)
+            sum_bel -= 1
+            hod -= 1
+            check_hod(x, y, chessplace[x][y], 2)
+        elif chessplace[x_last][y_last+1] == 1:
+            chessplace[x_last][y_last+1] = chessplace[x_last][y_last]
+            chessplace[x_last][y_last] = 0
+            pole[x_last][y_last+1]['image'] = last_image
+            pole[x_last][y_last]['image'] = ''
+            check_hod(x_last, y_last, chessplace[x][y], 1)
+            sum_bel -= 1
+            hod -= 1
+            check_hod(x, y, chessplace[x][y], 2)
+        elif x_last != 0 and y_last != 0 and chessplace[x_last][y_last+1] != 1 and chessplace[x_last+1][y_last] != 1:
             if chessplace[x_last-1][y_last-1] != 2 and chessplace[x_last-1][y_last-1] != -1:
                 chessplace[x_last-1][y_last-1] = chessplace[x_last][y_last]
                 chessplace[x_last][y_last] = 0
@@ -362,7 +398,7 @@ def check_hod(x,y,k,clear): # Проверка на правильность х�
                     check_and_mate()
 
 def check_figure(i,x,y): # Проверка на правильность выбора фигуры и ход
-    global hod, ngo, x_last, y_last, last_image, ubcheck, dbcheck, lbcheck, rbcheck, wcheck, rook_x, rook_y, a, b
+    global hod, ngo, x_last, y_last, last_image, ubcheck, dbcheck, lbcheck, rbcheck, wcheck, rook_x, rook_y, a, b, sum_bel, sum_cher, blackcount
     if ngo == 1 and pole[x][y]['image']!='': # Первое нажатие
         if hod == 1: # Ход белых
             if chessplace[x][y] == 1 or chessplace[x][y] == 2:
@@ -385,26 +421,178 @@ def check_figure(i,x,y): # Проверка на правильность выб
                         b = b1
             for x in range(0, 8):
                 for y in range(0, 8):
-                    if (ubcheck == 1 or lbcheck == 1) and chessplace[x][y] == -2:
-                        print(ubcheck,lbcheck)
-                        ubcheck = 0
-                        lbcheck = 0
-                        last_image = pole[x][y]['image']
-                        x_last = x
-                        y_last = y
-                        check_hod(x, y, -2, 3)
-                        return
-                    elif (dbcheck == 1 or rbcheck == 1) and chessplace[x][y] == -2:
-                        print(dbcheck, rbcheck)
-                        dbcheck = 0
-                        rbcheck = 0
-                        last_image = pole[x][y]['image']
-                        x_last = x
-                        y_last = y
-                        check_hod(x, y, -2, 4)
-                        return
+                    if sum_bel == 0 and sum_cher == 0:
+                        if (ubcheck == 1 or lbcheck == 1) and chessplace[x][y] == -2:
+                            ubcheck = 0; lbcheck = 0
+                            last_image = pole[x][y]['image']
+                            x_last = x
+                            y_last = y
+                            check_hod(x, y, -2, 3)
+                            return
+                        elif (dbcheck == 1 or rbcheck == 1) and chessplace[x][y] == -2:
+                            dbcheck = 0; rbcheck = 0
+                            last_image = pole[x][y]['image']
+                            x_last = x
+                            y_last = y
+                            check_hod(x, y, -2, 4)
+                            return
+                        elif chessplace[a][b] == 1 and chessplace[x][y] == -1:
+                            for k in range(0,y-1):
+                                if a == x and b == k:
+                                    last_image = pole[x][y]['image']
+                                    chessplace[a][b] = chessplace[x][y]
+                                    chessplace[x][y] = 0
+                                    pole[a][b]['image'] = last_image
+                                    pole[x][y]['image'] = ''
+                                    sum_bel -= 1
+                                    hod -= 1
+                                    return
+                            for k1 in range(y+1,8):
+                                if a == x and b == k1:
+                                    last_image = pole[x][y]['image']
+                                    chessplace[a][b] = chessplace[x][y]
+                                    chessplace[x][y] = 0
+                                    pole[a][b]['image'] = last_image
+                                    pole[x][y]['image'] = ''
+                                    sum_bel -= 1
+                                    hod -= 1
+                                    return
+                            for k2 in range(0,x-1):
+                                if b == y and a == k2:
+                                    last_image = pole[x][y]['image']
+                                    chessplace[a][b] = chessplace[x][y]
+                                    chessplace[x][y] = 0
+                                    pole[a][b]['image'] = last_image
+                                    pole[x][y]['image'] = ''
+                                    sum_bel -= 1
+                                    hod -= 1
+                                    return
+                            for k3 in range(x+1,8):
+                                if b == y and a == k3:
+                                    last_image = pole[x][y]['image']
+                                    chessplace[a][b] = chessplace[x][y]
+                                    chessplace[x][y] = 0
+                                    pole[a][b]['image'] = last_image
+                                    pole[x][y]['image'] = ''
+                                    sum_bel -= 1
+                                    hod -= 1
+                                    return
+                        else:
+                            for a3 in range(0,8):
+                                for b3 in range(0,8):
+                                    if chessplace[x][y] == -2 and chessplace[a3][b3] == -1:
+                                        for k4 in range(x+1,8):
+                                            if a3 == k4 and blackcount == 0:
+                                                last_image = pole[a3][b3]['image']
+                                                chessplace[k4][y] = chessplace[a3][b3]
+                                                chessplace[a3][b3] = 0
+                                                pole[k4][y]['image'] = last_image
+                                                pole[a3][b3]['image'] = ''
+                                                hod -= 1
+                                                blackcount += 1
+                                                check_and_mate()
+                                                return
+                                        for k5 in range(y+1,8):
+                                            if b3 == k5 and blackcount == 0:
+                                                last_image = pole[a3][b3]['image']
+                                                chessplace[x][k5] = chessplace[a3][b3]
+                                                chessplace[a3][b3] = 0
+                                                pole[x][k5]['image'] = last_image
+                                                pole[a3][b3]['image'] = ''
+                                                hod -= 1
+                                                blackcount += 1
+                                                check_and_mate()
+                                                return
+                                        for k6 in range(0,x-1):
+                                            if a3 == k6 and blackcount == 0:
+                                                last_image = pole[a3][b3]['image']
+                                                chessplace[k6][y] = chessplace[a3][b3]
+                                                chessplace[a3][b3] = 0
+                                                pole[k6][y]['image'] = last_image
+                                                pole[a3][b3]['image'] = ''
+                                                hod -= 1
+                                                blackcount += 1
+                                                check_and_mate()
+                                                return
+                                        for k7 in range(0,y-1):
+                                            if b3 == k7 and blackcount == 0:
+                                                last_image = pole[a3][b3]['image']
+                                                chessplace[x][k7] = chessplace[a3][b3]
+                                                chessplace[a3][b3] = 0
+                                                pole[x][k7]['image'] = last_image
+                                                pole[a3][b3]['image'] = ''
+                                                hod -= 1
+                                                blackcount += 1
+                                                check_and_mate()
+                                                return
+                    elif sum_bel != 0 and sum_cher == 0:
+                        for a2 in range(0,8):
+                            for b2 in range(0,8):
+                                if chessplace[x][y] == 2 and chessplace[a2][b2] == -1:
+                                    for k in range(x+1,8):
+                                        if a2 == k:
+                                            last_image = pole[a2][b2]['image']
+                                            chessplace[k][y] = chessplace[a2][b2]
+                                            chessplace[a2][b2] = 0
+                                            pole[k][y]['image'] = last_image
+                                            pole[a2][b2]['image'] = ''
+                                            hod -= 1
+                                            check_and_mate()
+                                            return
+                                    for k1 in range(y+1,8):
+                                        if b2 == k1:
+                                            last_image = pole[a2][b2]['image']
+                                            chessplace[x][k1] = chessplace[a2][b2]
+                                            chessplace[a2][b2] = 0
+                                            pole[x][k1]['image'] = last_image
+                                            pole[a2][b2]['image'] = ''
+                                            hod -= 1
+                                            check_and_mate()
+                                            return
+                                    for k2 in range(0,x-1):
+                                        if a2 == k2:
+                                            last_image = pole[a2][b2]['image']
+                                            chessplace[k2][y] = chessplace[a2][b2]
+                                            chessplace[a2][b2] = 0
+                                            pole[k2][y]['image'] = last_image
+                                            pole[a2][b2]['image'] = ''
+                                            hod -= 1
+                                            check_and_mate()
+                                            return
+                                    for k3 in range(0,y-1):
+                                        if b2 == k3:
+                                            last_image = pole[a2][b2]['image']
+                                            chessplace[x][k3] = chessplace[a2][b2]
+                                            chessplace[a2][b2] = 0
+                                            pole[x][k3]['image'] = last_image
+                                            pole[a2][b2]['image'] = ''
+                                            hod -= 1
+                                            check_and_mate()
+                                            return
+                    elif sum_bel == 0 and sum_cher != 0:
+                        for c in range(0,8):
+                            for d in range(0,8):
+                                if (c<8 and d<8) and chessplace[c][d] == -2 and chessplace[c+1][d+1] != 2 and chessplace[c+1][d+1] != 1:
+                                    last_image = pole[c][d]['image']
+                                    chessplace[c+1][c+1] = chessplace[c][d]
+                                    chessplace[c][d] = 0
+                                    pole[c+1][c+1]['image'] = last_image
+                                    pole[c][d]['image'] = ''
+                                    hod -= 1
+                                    check_and_mate()
+                                    return
+                                elif (c == 8 and d == 8) and chessplace[c][d] == -2 and chessplace[c-1][d-1] != 2 and chessplace[c-1][d-1] != 1:
+                                    last_image = pole[c][d]['image']
+                                    chessplace[c-1][c-1] = chessplace[c][d]
+                                    chessplace[c][d] = 0
+                                    pole[c-1][c-1]['image'] = last_image
+                                    pole[c][d]['image'] = ''
+                                    hod -= 1
+                                    check_and_mate()
+                                    return
+                    elif sum_bel != 0 and sum_cher != 0:
+                        result(white_win, black_win, gamedraw)
     elif ngo == 2 and pole[x][y]['image']!='': # Второе нажатие
-        global sum_bel, sum_cher
         if pole[x][y]['image'] == str(circle):
             chessplace[x][y] = chessplace[x_last][y_last]
             chessplace[x_last][y_last] = 0
@@ -423,17 +611,7 @@ def check_figure(i,x,y): # Проверка на правильность выб
             sum_cher -= 1
             ngo = 1
             check_hod(x,y,chessplace[x][y], 2)
-            result(white_win, black_win, gamedraw)
-        elif hod == 1 and chessplace[x][y] == 1: # Съесть белую ладью
-            chessplace[x][y] = chessplace[x_last][y_last]
-            chessplace[x_last][y_last] = 0
-            pole[x][y]['image'] = last_image
-            pole[x_last][y_last]['image'] = ''
-            check_hod(x_last, y_last, chessplace[x][y], 1)
-            sum_bel -= 1
-            ngo = 1
-            check_hod(x, y, chessplace[x][y], 2)
-            result(white_win, black_win, gamedraw)
+            check_and_mate()
         check_figure(i,x,y)
     else:
         mb.showerror(title="error", message="Неправильный ход")
