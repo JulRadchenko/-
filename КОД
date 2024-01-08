@@ -15,23 +15,8 @@ au_login = StringVar()
 reg_login = StringVar()
 bg = PhotoImage(file="backgrimage.png")
 
-hod = 1
-ngo = 1
-a = 0
-b = 0
-rook_x = 0
-rook_y = 0
-y_last = 0
-x_last= 0
-count_wcheck = 0
-count_bcheck = 0
-wcheck = 0
-ubcheck = 0
-dbcheck = 0
-lbcheck = 0
-rbcheck = 0
-sum_bel = 0
-sum_cher = 0
+hod = 1; ngo = 1; a = 0; b = 0; rook_x = 0; rook_y = 0; y_last = 0; x_last= 0; count_wcheck = 0; count_bcheck = 0
+wcheck = 0; ubcheck = 0; dbcheck = 0; lbcheck = 0; rbcheck = 0; sum_bel = 0; sum_cher = 0
 
 global chessplace # Массив моделирования игрового поля
 chessplace = [[0,0,0,0,0,0,0,0],
@@ -42,7 +27,7 @@ chessplace = [[0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0]]
-global pole 
+global pole
 pole = [[0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0],
@@ -168,9 +153,7 @@ def draw_chessboard(window, white_win, black_win, gamedraw): # Отрисовк�
     canvas_board = Canvas(chessboard, bg='white', width=800, height=800)
     canvas_board.place(x=50, y=50)
     global color
-    worb = 0
-    row = 0
-    col = 0
+    worb = 0; row = 0; col = 0
     for i in range(8): # Определение цвета клетки
         for j in range(8):
             worb += 1
@@ -281,7 +264,6 @@ def check_hod(x,y,k,clear): # Проверка на правильность х�
     elif clear == 3: # Бот, ходы черных фигур
         global hod,x_last,y_last,last_image, a, b
         if x_last != 7 and y_last != 7:
-            print('1)', x,y, a, b)
             if chessplace[x_last+1][y_last+1] != 2 and chessplace[x+1][y+1] != -1:
                 chessplace[x+1][y+1] = chessplace[x_last][y_last]
                 chessplace[x_last][y_last] = 0
@@ -297,7 +279,6 @@ def check_hod(x,y,k,clear): # Проверка на правильность х�
                 hod -= 1
                 check_and_mate()
         else:
-            print('2)',x,y, a, b)
             if (x_last == 7 and y_last == 7 and b == y_last) or (x_last == 7 and y_last != 7 and b == y_last) \
                     or (y_last == 7 and x_last != 7 and b == y_last):
                 if chessplace[x_last][y_last-1] != 2 and chessplace[x_last][y_last-1] != -1:
@@ -331,7 +312,6 @@ def check_hod(x,y,k,clear): # Проверка на правильность х�
                     hod -= 1
                     check_and_mate()
     elif clear == 4:
-        print('3)',x,y, a, b)
         if x_last != 0 and y_last != 0:
             if chessplace[x_last-1][y_last-1] != 2 and chessplace[x_last-1][y_last-1] != -1:
                 chessplace[x_last-1][y_last-1] = chessplace[x_last][y_last]
@@ -348,7 +328,6 @@ def check_hod(x,y,k,clear): # Проверка на правильность х�
                 hod -= 1
                 check_and_mate()
         else:
-            print('4)',x,y, a, b)
             if (x_last == 0 and y_last == 0 and b == y_last) or (y_last == 0 and x_last != 0 and b == y_last) \
                     or (x_last == 0 and y_last != 0 and b == y_last):
                 if chessplace[x_last][y_last+1] != 2 and chessplace[x_last][y_last+1] != -1:
