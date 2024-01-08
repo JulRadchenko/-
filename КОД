@@ -145,8 +145,8 @@ def draw_chessboard(window, white_win, black_win, gamedraw):  # Отрисовк
     canvas.pack(fill="both", expand=True)
     # Буквенные обозначения по краям поля
     # Снизу
-    canvas.create_text(100, 875, text='A'), canvas.create_text(200, 875, text='B'), canvas.create_text(300, 875,                                                                                                 text='C')
-    canvas.create_text(400, 875, text='D'), canvas.create_text(500, 875, text='E'), canvas.create_text(600, 875,                                                                                                 text='F')
+    canvas.create_text(100, 875, text='A'), canvas.create_text(200, 875, text='B'), canvas.create_text(300, 875, text='C')
+    canvas.create_text(400, 875, text='D'), canvas.create_text(500, 875, text='E'), canvas.create_text(600, 875, text='F')
     canvas.create_text(700, 875, text='G'), canvas.create_text(800, 875, text='H')
     # Сверху
     canvas.create_text(100, 25, text='H'), canvas.create_text(200, 25, text='G'), canvas.create_text(300, 25, text='F')
@@ -154,8 +154,8 @@ def draw_chessboard(window, white_win, black_win, gamedraw):  # Отрисовк
     canvas.create_text(700, 25, text='B'), canvas.create_text(800, 25, text='A')
     # Численные обозначения по краям поля
     # Справа
-    canvas.create_text(875, 100, text='1'), canvas.create_text(875, 200, text='2'), canvas.create_text(875, 300,                                                                                           text='3')
-    canvas.create_text(875, 400, text='4'), canvas.create_text(875, 500, text='5'), canvas.create_text(875, 600,                                                                                                 text='6')
+    canvas.create_text(875, 100, text='1'), canvas.create_text(875, 200, text='2'), canvas.create_text(875, 300, text='3')
+    canvas.create_text(875, 400, text='4'), canvas.create_text(875, 500, text='5'), canvas.create_text(875, 600, text='6')
     canvas.create_text(875, 700, text='7'), canvas.create_text(875, 800, text='8')
     # Слева
     canvas.create_text(25, 100, text='8'), canvas.create_text(25, 200, text='7'), canvas.create_text(25, 300, text='6')
@@ -261,13 +261,8 @@ def bot(): # Ходы бота
     elif sum_cher == -1:
         check_figure(0, poz_kor_bot_x, poz_kor_bot_y, 1)
         check_figure(0, poz_hod_x, poz_hod_y, 1)
-    elif bcheck == 0 and (poz_lad_bot_x == poz_lad_x or poz_lad_bot_y == poz_lad_y) and (
-            poz_lad_bot_x != poz_kor_bot_x or poz_lad_bot_y != poz_kor_bot_y): # Если нет шаха для черного короля и две ладьи на одной прямой
-        check_figure(0, poz_lad_bot_x, poz_lad_bot_y, 1)
-        check_figure(0, poz_lad_x, poz_lad_y, 1)
-        sum_bel = -1
-    elif bcheck == 1 and (poz_lad_bot_x == poz_lad_x or poz_lad_bot_y == poz_lad_y) and (
-            poz_lad_bot_x != poz_kor_bot_x or poz_lad_bot_y != poz_kor_bot_y): # Если есть шах для черного короля и две ладьи на одной прямой
+    elif (poz_lad_bot_x == poz_lad_x or poz_lad_bot_y == poz_lad_y) and (
+            poz_lad_bot_x != poz_kor_bot_x or poz_lad_bot_y != poz_kor_bot_y): # Если две ладьи на одной прямой
         check_figure(0, poz_lad_bot_x, poz_lad_bot_y, 1)
         check_figure(0, poz_lad_x, poz_lad_y, 1)
         sum_bel = -1
